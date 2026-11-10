@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Cuánto pagaría usted en aportes por salud con la nueva reforma?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --soft:#f5f5f3; --ink:#1b1b1b; --muted:#5f6368; --line:#e3e3df;
+  --accent:#1f5fa8; --accent-soft:#e8f0fa; --up:#b3261e; --up-soft:#fbeceb; --ok:#1e7a46;
+  --warn:#8a5a00; --warn-soft:#fdf3dc;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:0 0 6px;line-height:1.25}
+h2{font-size:1.05rem;margin:24px 0 10px}
+p.lead{color:var(--muted);margin:0 0 16px;font-size:.95rem}
+.card{background:var(--soft);border-radius:12px;padding:16px;margin-bottom:14px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:4px}
+@media (max-width:360px){select{font-size:.88rem!important}}
+select{width:100%;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+input[type=text]{width:100%;font:inherit;font-size:1.2rem;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.chk{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:.88rem}
+.chk input{margin-top:3px}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+@media (max-width:620px){.res{grid-template-columns:1fr}}
+.box{border-radius:10px;padding:12px;background:#fff;border:1px solid var(--line)}
+.box .k{font-size:.8rem;color:var(--muted)}
+.box .v{font-size:1.4rem;font-weight:700;margin-top:2px}
+.box .s{font-size:.8rem;color:var(--muted);margin-top:2px}
+.box.prop{background:var(--accent-soft);border-color:transparent}
+.box.diff{background:var(--up-soft);border-color:transparent}
+.box.diff .v{color:var(--up)}
+.box.diff.zero{background:#fff;border-color:var(--line)}
+.box.diff.zero .v{color:var(--ok)}
+.box.pend{background:var(--warn-soft);border-color:transparent}
+.box.pend .v{font-size:.95rem;color:var(--warn)}
+.detail{font-size:.86rem;color:var(--muted);margin-top:12px}
+.detail b{color:var(--ink);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.84rem;background:#fff}
+th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--muted);font-size:.76rem}
+.scroll{overflow-x:auto}
+.up{color:var(--up);font-weight:600}
+.note{font-size:.8rem;color:var(--muted)}
+.note li{margin-bottom:5px}
+.tag{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:999px;font-weight:600;vertical-align:middle}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.info{background:var(--accent-soft);color:var(--accent)}
+a{color:var(--accent)}
+.hide{display:none}
+</style>
+</head>
+<body>
+<main>
+  <h1>¿Cuánto pagaría usted en aportes por salud con la nueva reforma?</h1>
+  <p class="lead">Escriba su salario o ingreso mensual y compare su aporte a salud de hoy con el que tendría si se aprueba el Proyecto de Ley 477 de 2026 Cámara (Ley de Rescate Económico), que regiría desde el 1 de enero de 2027. <span id="estado" class="tag warn">Proyecto en trámite</span></p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button data-t="dep" class="on">Asalariado</button>
+      <button data-t="ind">Independiente</button>
+      <button data-t="pen">Pensionado</button>
+    </div>
+    <p id="tipoNota" style="margin:10px 0 14px;color:var(--muted,#5f6368);font-size:.92em;line-height:1.4">Trabaja con contrato laboral. Le descuentan la salud del salario y su empleador paga otra parte.</p>
+    <label id="lblIng" for="ing">Salario mensual (COP)</label>
+    <input type="text" id="ing" inputmode="numeric" value="6'000.000" autocomplete="off">
+    <div id="optDep">
+      <div class="chk"><input type="checkbox" id="integral"><span>Tengo salario integral (se cotiza sobre el 70 %)</span></div>
+      <label for="emp" style="margin-top:12px">¿Quién le paga el salario?</label>
+      <select id="emp">
+        <option value="empresa" selected>Una empresa que declara renta</option>
+        <option value="pn25">Una persona con 2 a 5 trabajadores</option>
+        <option value="pn6">Una persona con 6 o más trabajadores</option>
+        <option value="no">Otro empleador (paga el aporte completo)</option>
+      </select>
+      <p style="margin:6px 0 0;color:var(--muted,#5f6368);font-size:.85em;line-height:1.4">Esta respuesta solo cambia lo que paga su empleador por su salud, no lo que paga usted.</p>
+    </div>
+    <div class="res">
+      <div class="box"><div class="k" id="kHoy">Usted paga hoy</div><div class="v" id="rHoy">–</div><div class="s" id="sHoy"></div></div>
+      <div class="box prop" id="bProp"><div class="k">Pagaría con la reforma (2027)</div><div class="v" id="rProp">–</div><div class="s" id="sProp"></div></div>
+      <div class="box diff" id="bDiff"><div class="k">Diferencia</div><div class="v" id="rDiff">–</div><div class="s" id="sDiff"></div></div>
+    </div>
+    <div class="detail" id="detail"></div>
+  </div>
+
+  <div id="secTablas">
+    <h2>Aporte del empleado según su salario</h2>
+    <div class="card scroll">
+      <table id="tDep"><thead></thead><tbody></tbody></table>
+      <p class="note" id="notaSalto"></p>
+    </div>
+    <h2>Aporte del independiente según su ingreso</h2>
+    <div class="card scroll">
+      <table id="tInd"><thead></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <h2>Cómo se calcula</h2>
+  <div class="card">
+    <ul class="note">
+      <li><b>Hoy:</b> el empleado aporta el 4 % de su salario y el empleador el 8,5 % (Ley 100 de 1993, art. 204). Las empresas declarantes de renta y las personas naturales con 2 o más trabajadores no pagan su parte por quienes devenguen menos de 10 salarios mínimos (Estatuto Tributario, art. 114-1). El independiente paga el 12,5 % sobre el 40 % de su ingreso (Ley 2277 de 2022, art. 89). El pensionado paga 4 % con un salario mínimo, 10 % entre más de 1 y 3, y 12 % por encima de 3 (Ley 100, art. 204; Ley 2294 de 2023, art. 78).</li>
+      <li id="liReforma"><b>Con la reforma:</b> el artículo 21 del proyecto fija tarifas por tramos de ingreso para empleados (de 4 % a 8 %) e independientes (de 12,5 % a 15,5 %). El tramo se define con la base de cotización en salarios mínimos y su tarifa se aplica sobre toda esa base. En los independientes, la base es el 40 % del ingreso. El artículo 20 limita la exoneración de las empresas y de las personas naturales con 6 o más trabajadores: completa hasta 2 salarios mínimos, parcial (4 % de salud) de más de 2 a 3, y ninguna por encima de 3. Las personas naturales con 2 a 5 trabajadores quedarían exoneradas por completo.</li>
+      <li>La base de cotización va de 1 a 25 salarios mínimos (Ley 100, art. 18). Los valores se redondean como en la Planilla Integrada de Liquidación de Aportes (PILA): la base al peso y cada aporte a la centena superior (Decreto 1990 de 2016).</li>
+      <li>Se usa el salario mínimo de 2026, $1'750.905 (Decreto 1469 de 2025). El de 2027 aún no se ha fijado, así que las cifras de 2027 son una simulación con el mínimo actual.</li>
+      <li>No incluye pensión, riesgos laborales ni parafiscales. Los contratos de tiempo parcial y los independientes que restan costos tienen reglas propias.</li>
+    </ul>
+  </div>
+  <p class="note">Fuentes: <a href="https://www.camara.gov.co/wp-content/uploads/2026/10/proyectos-ley/documentos/proyecto-36548/PROYECTO-DE-LEY-Rescate-Economico-2026-VSD-RADICADA-1.pdf" target="_blank" rel="noopener">Proyecto de Ley 477 de 2026 Cámara, texto radicado, arts. 20 y 21</a> · <a href="https://normativa.colpensiones.gov.co/colpens/docs/ley_0100_1993.htm" target="_blank" rel="noopener">Ley 100 de 1993</a> · <a href="https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_5299_2026.htm" target="_blank" rel="noopener">Estatuto Tributario, art. 114-1 (DIAN)</a> · <a href="https://ugpp.gov.co/sites/default/files/Normas/Proyecto%20Resolucion_Presuncion_Costos_Artc_89_Ley_2277_V3_25_04_2024_VF_2_DPRT.pdf" target="_blank" rel="noopener">Ley 2277 de 2022, art. 89 (UGPP)</a> · <a href="https://normativa.colpensiones.gov.co/colpens/compilacion/docs/resolucion_minsaludps_1271_2023.htm" target="_blank" rel="noopener">Resolución 1271 de 2023</a> · <a href="https://normativa.colpensiones.gov.co/compilacion/docs/decreto_1990_2016.htm" target="_blank" rel="noopener">Decreto 1990 de 2016</a> · <a href="https://normativa.colpensiones.gov.co/compilacion/docs/decreto_1469_2025.htm" target="_blank" rel="noopener">Decreto 1469 de 2025</a></p>
+</main>
+<script>
+// ===================================================================
+// Cambie a true SOLO después de cotejar las tablas de PROPUESTA con
+// los artículos 20 y 21 del texto oficial radicado del PL 477 de 2026C.
+const VERIFICADO = true; // Cotejado con el texto radicado, arts. 20 y 21 (págs. 228-231)
+// ===================================================================
+const SMMLV = 1750905; // Decreto 1469 de 2025
+
+// Tramos propuestos (art. 21 PL 477/2026C): [hasta X SMLMV, tarifa %].
+// El tramo se ubica con el ingreso base de cotización (IBC): el nuevo inciso 1 del art. 204
+// fija la tarifa como "porcentaje del ingreso o salario base de cotización" y la exposición
+// de motivos (pág. 55) habla de trabajadores "con un IBC mayor a 2 SMMLV".
+const PROP_DEP = [[2,4],[4,5.5],[5,6],[10,6.5],[15,7],[20,7.5],[25,8]];
+const PROP_IND = [[2,12.5],[4,13],[5,13.5],[10,14],[15,14.5],[20,15],[25,15.5]];
+// Exoneración propuesta (art. 20): salud a cargo del empleador exonerable
+const PROP_EMP = [[2,0],[3,4],[Infinity,8.5]];
+
+const num = n => { const s = Math.round(Math.abs(n)).toLocaleString('es-CO'); const p = s.split('.'); const t = p.length > 2 ? p.slice(0, -2).join('.') + "'" + p.slice(-2).join('.') : s; return (n < 0 ? '-' : '') + t; };
+const fmt = n => '$' + num(n);
+const pct = n => String(n).replace('.', ',') + ' %';
+const c2 = n => n.toFixed(2).replace('.',',');
+const parse = s => Number(String(s).split(',')[0].replace(/[^\d]/g,'')) || 0;
+let tipo = 'dep';
+
+// Decreto 1990 de 2016: IBC al peso superior; aportes al múltiplo de 100 superior
+const alPeso = v => Math.ceil(v - 1e-7);
+const ap100 = (ibc, tasa) => Math.ceil((ibc * tasa / 100) / 100 - 1e-9) * 100;
+const ibcOf = (base, S) => Math.min(Math.max(alPeso(base), S), 25*S);   // Ley 100, art. 18
+const tramo = (tabla, valor, S) => { for(const [h,t] of tabla){ if(valor <= h*S) return t; } return tabla[tabla.length-1][1]; };
+const tarPen = n => n<=1 ? 4 : n<=3 ? 10 : 12;
+
+// Tipos de empleador: empresa | pn25 | pn6 | no
+function dep(ing, S, integral, emp){
+  const ibc = ibcOf(integral ? ing*0.7 : ing, S);
+  const exon = emp !== 'no';
+  // Hoy (ET art. 114-1): exoneración por trabajadores de menos de 10 SMLMV
+  const exHoy = exon && ing < 10*S;
+  const wH = ap100(ibc, 4), tH = ap100(ibc, exHoy ? 4 : 12.5);
+  // Propuesta
+  const tw = tramo(PROP_DEP, ibc, S);
+  // Propuesta (art. 20): persona natural con 2 a 5 trabajadores, exoneración total
+  const te = emp==='pn25' ? 0 : exon ? tramo(PROP_EMP, ing, S) : 8.5;
+  const wP = ap100(ibc, tw), tP = ap100(ibc, tw + te);
+  return {ibc, hoy:{trab:wH, emp:tH-wH, total:tH, te: exHoy?0:8.5}, prop:{trab:wP, emp:tP-wP, total:tP, tw, te}};
+}
+function ind(ing, S){
+  const ibc = ibcOf(ing*0.4, S);
+  const t = tramo(PROP_IND, ibc, S);
+  return {ibc, hoy: ap100(ibc, 12.5), prop: ap100(ibc, t), t};
+}
+function pen(ing, S){
+  const base = alPeso(Math.min(ing, 25*S)); const t = tarPen(ing/S);
+  return {t, hoy: ap100(base, t)};
+}
+
+const $ = id => document.getElementById(id);
+function setDiff(hoy, prop){
+  const d = prop - hoy;
+  $('rDiff').textContent = (d>0?'+':'') + fmt(d) + ' al mes';
+  $('sDiff').textContent = d>0 ? `${fmt(d*12)} más al año` : 'Sin cambio';
+  $('bDiff').classList.toggle('zero', d<=0);
+}
+function calc(){
+  const S = SMMLV;
+  const ing = parse($('ing').value);
+  if(!ing){ ['rHoy','rProp','rDiff'].forEach(id=>$(id).textContent='–'); ['sHoy','sProp','sDiff'].forEach(id=>$(id).textContent=''); $('detail').textContent=''; return enviarAltura(); }
+  let aviso = '';
+  const pendiente = !VERIFICADO;
+  $('bProp').className = 'box ' + (pendiente ? 'pend' : 'prop');
+  $('bDiff').classList.toggle('hide', pendiente);
+
+  if(tipo==='dep'){
+    const x = dep(ing, S, $('integral').checked, $('emp').value);
+    if(ing < S) aviso = ' <b>Ojo:</b> el salario es inferior al mínimo; se usa el piso de 1 salario mínimo. El tiempo parcial tiene reglas propias.';
+    if($('integral').checked && ing < 13*S) aviso = ' <b>Ojo:</b> el salario integral no puede ser inferior a 13 salarios mínimos.';
+    $('kHoy').textContent = 'Usted paga hoy';
+    $('rHoy').textContent = fmt(x.hoy.trab); $('sHoy').textContent = `4 % · ${fmt(x.hoy.trab*12)} al año`;
+    if(pendiente){ $('rProp').textContent = 'Cálculo en verificación'; $('sProp').textContent = 'Se cotejan las tarifas con el texto oficial del proyecto.'; }
+    else { $('rProp').textContent = fmt(x.prop.trab); $('sProp').textContent = `${pct(x.prop.tw)} · ${fmt(x.prop.trab*12)} al año`; setDiff(x.hoy.trab, x.prop.trab); }
+    let det = `Ingreso base de cotización: <b>${fmt(x.ibc)}</b> (${c2(x.ibc/S)} salarios mínimos). Su empleador paga hoy <b>${fmt(x.hoy.emp)}</b> a salud por usted`;
+    det += pendiente ? '.' : `; con la reforma pagaría <b>${fmt(x.prop.emp)}</b>.`;
+    $('detail').innerHTML = det + aviso;
+  } else if(tipo==='ind'){
+    const x = ind(ing, S);
+    if(ing < S) aviso = ' <b>Ojo:</b> con ingresos inferiores a 1 salario mínimo no aplica la regla del 40 %; se muestra el piso de 1 salario mínimo.';
+    else if(ing*0.4 < S) aviso = ' El 40 % de su ingreso es menor que el mínimo, así que la base sube a 1 salario mínimo.';
+    $('kHoy').textContent = 'Usted paga hoy';
+    $('rHoy').textContent = fmt(x.hoy); $('sHoy').textContent = `12,5 % de la base · ${fmt(x.hoy*12)} al año`;
+    if(pendiente){ $('rProp').textContent = 'Cálculo en verificación'; $('sProp').textContent = 'Se cotejan las tarifas con el texto oficial del proyecto.'; }
+    else { $('rProp').textContent = fmt(x.prop); $('sProp').textContent = `${pct(x.t)} de la base · ${fmt(x.prop*12)} al año`; setDiff(x.hoy, x.prop); }
+    $('detail').innerHTML = `Base de cotización (40 % del ingreso): <b>${fmt(x.ibc)}</b> (${c2(x.ibc/S)} salarios mínimos).` + aviso;
+  } else {
+    const x = pen(ing, S);
+    if(ing < S) aviso = ' <b>Ojo:</b> la mesada es inferior al mínimo; revise el valor.';
+    $('kHoy').textContent = 'Usted paga hoy';
+    $('rHoy').textContent = fmt(x.hoy); $('sHoy').textContent = `${pct(x.t)} de la mesada · ${fmt(x.hoy*12)} al año`;
+    $('bProp').className = 'box prop';
+    $('rProp').textContent = fmt(x.hoy); $('sProp').textContent = 'El proyecto no cambia el aporte de los pensionados.';
+    $('bDiff').classList.remove('hide'); setDiff(x.hoy, x.hoy);
+    $('detail').innerHTML = `Mesada: <b>${fmt(ing)}</b> (${c2(ing/S)} salarios mínimos).` + aviso;
+  }
+  enviarAltura();
+}
+function tables(){
+  const S = SMMLV;
+  const v = VERIFICADO;
+  $('tDep').querySelector('thead').innerHTML = v
+    ? '<tr><th>Salario</th><th>Salarios mínimos</th><th>Hoy (4 %)</th><th>Tarifa reforma</th><th>Con la reforma</th><th>Diferencia/mes</th></tr>'
+    : '<tr><th>Salario</th><th>Salarios mínimos</th><th>Empleado (4 %)</th><th>Empleador (8,5 %)*</th><th>Total</th></tr>';
+  let h='';
+  const filas = v ? [1,2,null,3,4,5,6,8,10,15,20,25] : [1,1.5,2,3,4,5,6,8,10,15,20,25];
+  filas.forEach(m=>{
+    const sal = m===null ? 2*S+1000 : Math.round(m*S);
+    const x = dep(sal, S, false, 'no');
+    const lab = m===null ? `${fmt(sal)}*` : fmt(sal);
+    if(v){ const d=x.prop.trab-x.hoy.trab;
+      h+=`<tr><td>${lab}</td><td>${c2(sal/S)}</td><td>${fmt(x.hoy.trab)}</td><td>${pct(x.prop.tw)}</td><td>${fmt(x.prop.trab)}</td><td class="${d>0?'up':''}">${d>0?'+':''}${fmt(d)}</td></tr>`;
+    } else {
+      h+=`<tr><td>${lab}</td><td>${c2(sal/S)}</td><td>${fmt(x.hoy.trab)}</td><td>${fmt(x.hoy.emp)}</td><td>${fmt(x.hoy.total)}</td></tr>`;
+    }
+  });
+  $('tDep').querySelector('tbody').innerHTML=h;
+  $('notaSalto').textContent = v
+    ? '* 2 salarios mínimos más $1.000. Como la tarifa del tramo se aplica sobre todo el salario, superar los 2 salarios mínimos por poco ya sube el aporte de 4 % a 5,5 %.'
+    : '* Cuando el empleador no aplica la exoneración del art. 114-1.';
+  $('tInd').querySelector('thead').innerHTML = v
+    ? '<tr><th>Ingreso mensual</th><th>Base (40 %)</th><th>Hoy (12,5 %)</th><th>Tarifa reforma</th><th>Con la reforma</th><th>Diferencia/mes</th></tr>'
+    : '<tr><th>Ingreso mensual</th><th>Base (40 %)</th><th>Salarios mínimos de la base</th><th>Aporte (12,5 %)</th></tr>';
+  h='';
+  [2.5,5,10,12.5,15,25,50,62.5].forEach(m=>{
+    const ing=Math.round(m*S), x=ind(ing,S);
+    if(v){ const d=x.prop-x.hoy;
+      h+=`<tr><td>${fmt(ing)}</td><td>${fmt(x.ibc)}</td><td>${fmt(x.hoy)}</td><td>${pct(x.t)}</td><td>${fmt(x.prop)}</td><td class="${d>0?'up':''}">${d>0?'+':''}${fmt(d)}</td></tr>`;
+    } else {
+      h+=`<tr><td>${fmt(ing)}</td><td>${fmt(x.ibc)}</td><td>${c2(x.ibc/S)}</td><td>${fmt(x.hoy)}</td></tr>`;
+    }
+  });
+  $('tInd').querySelector('tbody').innerHTML=h;
+  $('liReforma').classList.toggle('hide', !v);
+  $('estado').textContent = v ? 'Proyecto en trámite' : 'Proyecto en trámite · cálculo de la reforma en verificación';
+}
+// Altura automática cuando la página va dentro de un iframe
+function enviarAltura(){
+  try{ if(window.parent !== window) window.parent.postMessage({tipo:'calc-salud-altura', altura: document.documentElement.scrollHeight}, '*'); }catch(e){}
+}
+const NOTAS = {dep:'Trabaja con contrato laboral. Le descuentan la salud del salario y su empleador paga otra parte.', ind:'Trabaja por su cuenta o por prestación de servicios y paga todo el aporte a salud.', pen:'Recibe una pensión. Le descuentan la salud de la mesada.'};
+function reformat(el){ const v=parse(el.value); el.value = v ? num(v) : ''; }
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); tipo=b.dataset.t;
+  $('optDep').style.display = tipo==='dep'?'block':'none';
+  $('lblIng').textContent = tipo==='dep'?'Salario mensual (COP)': tipo==='ind'?'Ingreso mensual (COP)':'Mesada pensional (COP)';
+  $('tipoNota').textContent = NOTAS[tipo];
+  calc();
+}));
+$('ing').addEventListener('input',()=>{ reformat($('ing')); calc(); });
+['integral','emp'].forEach(id=>$(id).addEventListener('change',calc));
+window.addEventListener('resize', enviarAltura);
+window.addEventListener('load', enviarAltura);
+calc(); tables();
+</script>
+</body>
+</html>
